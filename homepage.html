@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="page1.css">
+</head>
+<body onload="quote2()">
+
+<!--Nav--> 
+<nav>
+    <nav id="nav">
+        <ul>
+            <li><a href="homepage.html">Home</a></li><!--homepage-->
+            <li><a href="stocks.html">Stocks</a></li><!--games-->
+            <li><a href="dogs.html">Dogs </a></li><!--contactme-->
+        </ul>
+    </nav>
+<!--MAIN CONTENT-->
+<main>
+<h1>HomePage</h1>
+<div class="button">
+    <button class="button-1" onclick="location.href='stocks.html'">Stocks</button>
+    <button class="button-1" onclick="location.href='dogs.html'">Dogs</button>
+</div>
+</main>
+<div id="quote1">
+<p id="quote"> The quote is loading</p>
+</div>
+
+<!--Audio-->
+<div id="audio-box">
+    <h3>Voice Command</h3>
+    <p id="audio-instructions">
+    <h3>There are options to navigate using Audio</h3>
+    <p>Ensure your mic is on to use this feature</p>
+    <ul>
+        <li>Navigate to a different page <br>
+            Say "Navigate to Dogs". <page>
+        </li>
+        <li>Change page color<br>
+            Say "Change the color to red" <color>
+        </li>
+        <li>Say hello to yourself<br>
+        Say "Hello"
+        </li>
+        </ul>
+    </p>
+</div>
+<div class="audio-buttons">
+    <button class="button-2" onclick="turnOnAudio()">Turn On Audio</button>
+    <button class="button-2" onclick="turnOffAudio()">Turn Off Audio</button>
+</div>
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+<script src="page1.js"></script> 
+</body>
+</html>
+

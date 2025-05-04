@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="page1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simple-slider.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    
+</head>
+
+<body onload="dogPage()">
+
+
+
+<!--Nav--> 
+    <nav id="nav">
+        <ul>
+            <li><a href="homepage.html">Home</a></li><!--homepage-->
+            <li><a href="stocks.html">Stocks</a></li><!--games-->
+            <li><a href="dogs.html">Dogs </a></li><!--contactme-->
+        </ul>
+    </nav>
+    <h1> Carousel of Dogs</h1>
+    <div id="dogCarousel" class="slider" ></div><br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simple-slider.min.js"></script>
+    <h2>Dog Breeds</h2>
+    <div id="breedInfo" style="display: none;"> 
+        <h2 id="breedName"></h2>
+        <p id="breedDesc"></p>
+        <p id="breedLifeSpan"></p>
+        <p id="breedLifeMin"></p>
+        <p id="breedLifeMax"></p>
+    </div>
+    <div id="buttonbreed"></div>
+<!--Audio-->
+
+    <div id="audio-instructions">
+    <h3>There are options to navigate using Audio</h3>
+    <p>Ensure your mic is on to use this feature</p>
+    <ul>
+        <li>Load dog breed <br>EX:"Load dog breed Akita"</li>
+        <li>Navigate to a different page <br>
+            Say "Navigate to Dogs". <page>
+        </li>
+        <li>Change page color<br>
+            Say "Change the color to red" <color>
+        </li>
+        <li>Say hello to yourself<br> Say "Hello"</li>
+        </ul>
+</div>
+<div class="audio-buttons">
+    <button class="button-2" onclick="turnOnAudio()">Turn On Audio</button>
+    <button class="button-2" onclick="turnOffAudio()">Turn Off Audio</button>
+</div>
+
+
+
+
+
+
+<script>
+    function dogPage(){
+        loadDogPics();
+        loadDogBreeds();
+        loadCommands();
+    }
+
+async function loadDogPics(){
+    await fetch("https://dog.ceo/api/breeds/image/random/10")
+    .then(res => res.json())
+    .then(data => {
+        const dogs1 = document.getElementById("dogCarousel");
+        data.message.forEach(imgUrl => {
+            let image = document.createElement("img");
+            image.src=imgUrl;
+            image.height=250
+            image.width=250
+            dogs1.appendChild(image);
+    });
+    simpleslider.getSlider('.slider', {
+        delay:3,
+    })
+    
+});
+
+}
+function loadDogBreeds(){
+    fetch("https://dogapi.dog/api/v2/breeds")
+    .then(res => res.json())
+    .then(breeds => {
+        const breed1 = document.getElementById("buttonbreed")
+        breeds.data.forEach(breed => {
+            console.log(breed)
+            const breeds2 = document.createElement("button");
+            breeds2.textContent = breed.attributes.name;
+            breeds2.setAttribute("class", "breed3");
+            breeds2.addEventListener("click", () => showBreedInfo(breed))
+            breed1.appendChild(breeds2)
+        });
+    });
+    
+}
+function showBreedInfo(breed){
+    const attr = breed.attributes;
+    document.getElementById("breedName").textContent=attr.name;
+    document.getElementById("breedDesc").textContent = attr.description;
+    document.getElementById("breedLifeSpan").textContent= `Life span: ${attr.life.min} -${attr.life.max} `;
+    document.getElementById("breedInfo").style.display="block";
+
+    const [minLife, maxLife] = breed.life_span.split("-")
+    document.getElementById("breedLifeMin").textContent=`Min Life: ${attr.life.min} years`;
+    document.getElementById("breedLifeMax").textContent = `Max Life: ${attr.life.max} years`;
+    document.getElementById("breedInfo").style.display="block";
+}
+
+function loadCommands() {
+    if (annyang) {
+        // Let's define a command.
+        const commands = {
+            'load dog breed *breedName': function(breedName){
+                fetch("https://dogapi.dog/api/v2/breeds")
+                .then(res => res.json())
+                .then(breeds =>{
+                    const breedmatch = breeds.data.find(b => b.attributes.name.toLowerCase()=== breedName.toLowerCase());
+                    if(breedmatch) showBreedInfo(breedmatch);
+                });
+            }
+        };
+       
+       annyang.addCommands(commands);
+       
+    }
+
+}
+function turnOnAudio() {
+    if (annyang) {
+        loadCommands();
+        annyang.start();
+        alert("Voice command is ON");
+    }
+}
+
+function turnOffAudio() {
+    if (annyang) {
+        annyang.abort();
+        alert("Voice command is OFF");
+    }
+}
+
+</script>
+
+</body>
+</html>
+
